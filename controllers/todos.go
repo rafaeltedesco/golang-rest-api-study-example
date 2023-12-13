@@ -2,7 +2,6 @@ package controllers
 
 import (
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"time"
 )
@@ -35,24 +34,10 @@ func GetTodos() http.HandlerFunc {
 
 func CreateTodo() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var todoDTO TodoDTO
-		err := json.NewDecoder(r.Body).Decode(&todoDTO)
+		parsedDate := r.Context().Value("parsedDate").(time.Time)
+		Title := r.Context().Value("Title").(string)
 
-		if err != nil {
-			fmt.Println("Invalid Body: ", err)
-			http.Error(w, "Invalid Body", http.StatusBadRequest)
-		}
-
-		fmt.Println(todoDTO)
-
-		parsedData, err := time.Parse("2006-01-02", todoDTO.PlannedDate)
-
-		if err != nil {
-			fmt.Println("Invalid date", err)
-			http.Error(w, "Error parsing date", http.StatusBadRequest)
-		}
-
-		newTodo := Todo{Id: len(todos) + 1, Title: todoDTO.Title, PlannedDate: parsedData}
+		newTodo := Todo{Id: len(todos) + 1, Title: Title, PlannedDate: parsedDate}
 
 		todos = append(todos, newTodo)
 		jsonData, _ := json.Marshal(newTodo)
