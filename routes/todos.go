@@ -7,9 +7,10 @@ import (
 )
 
 func HandleTodos(r *mux.Router) {
-	r.HandleFunc("/todos", controllers.GetTodos()).Methods("GET")
-	r.HandleFunc("/todos/{id}", controllers.GetTodoById()).Methods("GET")
-	r.HandleFunc("/todos", middlewares.ValidateTodoMiddleware(controllers.CreateTodo())).Methods("POST")
-	r.HandleFunc("/todos/{id}/finish", controllers.MarkTodoAsDone()).Methods("PATCH")
-	r.HandleFunc("/todos/{id}", controllers.DeleteTodo()).Methods("DELETE")
+	todosRouter := r.PathPrefix("/todos").Subrouter()
+	todosRouter.HandleFunc("/", controllers.GetTodos()).Methods("GET")
+	todosRouter.HandleFunc("/{id}", controllers.GetTodoById()).Methods("GET")
+	todosRouter.HandleFunc("/", middlewares.ValidateTodoMiddleware(controllers.CreateTodo())).Methods("POST")
+	todosRouter.HandleFunc("/{id}/finish", controllers.MarkTodoAsDone()).Methods("PATCH")
+	todosRouter.HandleFunc("/{id}", controllers.DeleteTodo()).Methods("DELETE")
 }
