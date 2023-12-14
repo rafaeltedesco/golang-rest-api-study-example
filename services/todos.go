@@ -29,6 +29,10 @@ func DeleteTodo(id int) error {
 	return models.DeleteTodo(id)
 }
 
-func GetTodoById(id int) (models.Todo, error) {
+func GetTodoById(id int) (*models.Todo, error) {
 	return models.GetTodoById(id)
+}
+
+func MarkTodoAsDone(id int) error {
+	return models.MarkTodoAsDone(id)
 }
