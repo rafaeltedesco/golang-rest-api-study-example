@@ -1,6 +1,7 @@
 package models
 
 import (
+	"errors"
 	"time"
 )
 
@@ -30,4 +31,14 @@ func CreateTodo(todo Todo) Todo {
 	todos = append(todos, todo)
 	nextId++
 	return todo
+}
+
+func DeleteTodo(id int) error {
+	for idx, todo := range todos {
+		if todo.Id == id {
+			todos = append(todos[:idx], todos[idx+1:]...)
+			return nil
+		}
+	}
+	return errors.New("Not found")
 }

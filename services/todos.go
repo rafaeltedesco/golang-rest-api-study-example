@@ -24,3 +24,7 @@ func CreateTodo(todo models.Todo) dtos.TodoOutputDTO {
 	output := dtos.TodoOutputDTO{Id: newTodo.Id, Title: newTodo.Title, PlannedDate: newTodo.PlannedDate, IsDone: newTodo.IsDone}
 	return output
 }
+
+func DeleteTodo(id int) error {
+	return models.DeleteTodo(id)
+}
