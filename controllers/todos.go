@@ -94,7 +94,15 @@ func MarkTodoAsDone() http.HandlerFunc {
 		}
 		err = services.MarkTodoAsDone(id)
 		if err != nil {
-			errorHttp := dtos.ErrMessage{Message: err.Error(), StatusCode: http.StatusNotFound}
+			errorMessage := err.Error()
+			errorHttp := dtos.ErrMessage{Message: err.Error()}
+			switch errorMessage {
+			case "Not found":
+				errorHttp.StatusCode = http.StatusNotFound
+			case "Already marked as done":
+				errorHttp.StatusCode = http.StatusBadRequest
+			}
+
 			w.WriteHeader(errorHttp.StatusCode)
 			json.NewEncoder(w).Encode(errorHttp)
 			return
