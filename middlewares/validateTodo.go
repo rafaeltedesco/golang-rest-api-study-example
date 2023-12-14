@@ -7,13 +7,8 @@ import (
 	"net/http"
 	"time"
 
-	dtos "github.com/rafaeltedesco/rest-api/dtos/entities"
+	"github.com/rafaeltedesco/rest-api/dtos"
 )
-
-type ErrMessage struct {
-	Message    string
-	StatusCode int
-}
 
 func ValidateTodoMiddleware(next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
@@ -22,7 +17,7 @@ func ValidateTodoMiddleware(next http.Handler) http.HandlerFunc {
 
 		if err != nil {
 			fmt.Println("Invalid Body: ", err)
-			errObj, _ := json.Marshal(ErrMessage{Message: "Invalid Body", StatusCode: http.StatusBadRequest})
+			errObj, _ := json.Marshal(dtos.ErrMessage{Message: "Invalid Body", StatusCode: http.StatusBadRequest})
 			http.Error(w, string(errObj), http.StatusBadRequest)
 			return
 		}
@@ -31,7 +26,7 @@ func ValidateTodoMiddleware(next http.Handler) http.HandlerFunc {
 
 		if err != nil {
 			fmt.Println("Invalid date", err)
-			errObj, _ := json.Marshal(ErrMessage{Message: "Error parsing date", StatusCode: http.StatusBadRequest})
+			errObj, _ := json.Marshal(dtos.ErrMessage{Message: "Error parsing date", StatusCode: http.StatusBadRequest})
 			http.Error(w, string(errObj), http.StatusBadRequest)
 			return
 		}

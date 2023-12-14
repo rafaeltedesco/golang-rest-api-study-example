@@ -1,7 +1,7 @@
 package services
 
 import (
-	dtos "github.com/rafaeltedesco/rest-api/dtos/entities"
+	"github.com/rafaeltedesco/rest-api/dtos"
 	"github.com/rafaeltedesco/rest-api/models"
 )
 
