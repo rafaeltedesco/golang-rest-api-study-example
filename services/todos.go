@@ -1,30 +1,12 @@
 package services
 
-import (
-	"time"
-)
+import "github.com/rafaeltedesco/rest-api/models"
 
-var currDate = time.Now()
-
-type Todo struct {
-	Id          int
-	Title       string
-	PlannedDate time.Time
-	IsDone      bool
+func GetTodos() []models.Todo {
+	return models.GetTodos()
 }
 
-var todos = []Todo{
-	{Id: 1, Title: "Create an ETL python project", PlannedDate: currDate.Add(2 * 24 * time.Hour)},
-	{Id: 2, Title: "Create an API in Golang", PlannedDate: currDate.Add(5 * 24 * time.Hour)},
-}
-
-func GetTodos() []Todo {
-	return todos
-}
-
-func CreateTodo(todo *Todo) Todo {
-	todo.Id = len(todos) + 1
-	todo.IsDone = false
-	todos = append(todos, *todo)
-	return *todo
+func CreateTodo(todo models.Todo) models.Todo {
+	newTodo := models.CreateTodo(todo)
+	return newTodo
 }
