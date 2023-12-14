@@ -57,6 +57,9 @@ func MarkTodoAsDone(id int) error {
 	if err != nil {
 		return err
 	}
+	if todo.IsDone {
+		return errors.New("Already marked as done")
+	}
 	todo.IsDone = true
 	return nil
 }
