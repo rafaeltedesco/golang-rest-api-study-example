@@ -1,12 +1,26 @@
 package services
 
-import "github.com/rafaeltedesco/rest-api/models"
+import (
+	dtos "github.com/rafaeltedesco/rest-api/dtos/entities"
+	"github.com/rafaeltedesco/rest-api/models"
+)
 
-func GetTodos() []models.Todo {
-	return models.GetTodos()
+func GetTodos() []dtos.TodoOutputDTO {
+	todos := models.GetTodos()
+	var output []dtos.TodoOutputDTO
+	for _, todo := range todos {
+		output = append(output, dtos.TodoOutputDTO{
+			Id:          todo.Id,
+			Title:       todo.Title,
+			PlannedDate: todo.PlannedDate,
+			IsDone:      todo.IsDone,
+		})
+	}
+	return output
 }
 
-func CreateTodo(todo models.Todo) models.Todo {
+func CreateTodo(todo models.Todo) dtos.TodoOutputDTO {
 	newTodo := models.CreateTodo(todo)
-	return newTodo
+	output := dtos.TodoOutputDTO{Id: newTodo.Id, Title: newTodo.Title, PlannedDate: newTodo.PlannedDate, IsDone: newTodo.IsDone}
+	return output
 }

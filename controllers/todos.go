@@ -9,11 +9,6 @@ import (
 	"github.com/rafaeltedesco/rest-api/services"
 )
 
-type TodoDTO struct {
-	Title       string `json:"title"`
-	PlannedDate string `json:"plannedDate"`
-}
-
 func GetTodos() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		jsonData, _ := json.Marshal(services.GetTodos())

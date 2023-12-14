@@ -7,7 +7,7 @@ import (
 	"net/http"
 	"time"
 
-	c "github.com/rafaeltedesco/rest-api/controllers"
+	dtos "github.com/rafaeltedesco/rest-api/dtos/entities"
 )
 
 type ErrMessage struct {
@@ -17,7 +17,7 @@ type ErrMessage struct {
 
 func ValidateTodoMiddleware(next http.Handler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		var todoDTO c.TodoDTO
+		var todoDTO dtos.TodoInputDTO
 		err := json.NewDecoder(r.Body).Decode(&todoDTO)
 
 		if err != nil {
