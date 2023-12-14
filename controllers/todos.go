@@ -10,6 +10,7 @@ import (
 	"github.com/rafaeltedesco/rest-api/dtos"
 	"github.com/rafaeltedesco/rest-api/models"
 	"github.com/rafaeltedesco/rest-api/services"
+	"github.com/rafaeltedesco/rest-api/utils/mappers"
 )
 
 func GetTodos() http.HandlerFunc {
@@ -94,17 +95,7 @@ func MarkTodoAsDone() http.HandlerFunc {
 		}
 		err = services.MarkTodoAsDone(id)
 		if err != nil {
-			errorMessage := err.Error()
-			errorHttp := dtos.ErrMessage{Message: err.Error()}
-			switch errorMessage {
-			case "Not found":
-				errorHttp.StatusCode = http.StatusNotFound
-			case "Already marked as done":
-				errorHttp.StatusCode = http.StatusBadRequest
-			case "Cannot undone a not finished task":
-				errorHttp.StatusCode = http.StatusBadRequest
-			}
-
+			errorHttp := mappers.MapError(err)
 			w.WriteHeader(errorHttp.StatusCode)
 			json.NewEncoder(w).Encode(errorHttp)
 			return
@@ -127,17 +118,7 @@ func UndoneTask() http.HandlerFunc {
 		}
 		err = services.UndoneTodo(id)
 		if err != nil {
-			errorMessage := err.Error()
-			errorHttp := dtos.ErrMessage{Message: err.Error()}
-			switch errorMessage {
-			case "Not found":
-				errorHttp.StatusCode = http.StatusNotFound
-			case "Already marked as done":
-				errorHttp.StatusCode = http.StatusBadRequest
-			case "Cannot undone a not finished task":
-				errorHttp.StatusCode = http.StatusBadRequest
-			}
-
+			errorHttp := mappers.MapError(err)
 			w.WriteHeader(errorHttp.StatusCode)
 			json.NewEncoder(w).Encode(errorHttp)
 			return
