@@ -42,3 +42,12 @@ func DeleteTodo(id int) error {
 	}
 	return errors.New("Not found")
 }
+
+func GetTodoById(id int) (Todo, error) {
+	for _, todo := range todos {
+		if todo.Id == id {
+			return todo, nil
+		}
+	}
+	return Todo{}, errors.New("Not found")
+}

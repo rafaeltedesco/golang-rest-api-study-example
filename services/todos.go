@@ -28,3 +28,7 @@ func CreateTodo(todo models.Todo) dtos.TodoOutputDTO {
 func DeleteTodo(id int) error {
 	return models.DeleteTodo(id)
 }
+
+func GetTodoById(id int) (models.Todo, error) {
+	return models.GetTodoById(id)
+}

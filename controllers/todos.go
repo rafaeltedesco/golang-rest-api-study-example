@@ -43,14 +43,40 @@ func DeleteTodo() http.HandlerFunc {
 				httpError.Message,
 				httpError.StatusCode,
 			)
+			return
 		}
 		err = services.DeleteTodo(id)
 		if err != nil {
 			httpError = dtos.ErrMessage{Message: err.Error(), StatusCode: http.StatusNotFound}
 			jsonData, _ := json.Marshal(httpError)
 			http.Error(w, string(jsonData), httpError.StatusCode)
+			return
 		}
 
 		w.WriteHeader(http.StatusNoContent)
+	}
+}
+
+func GetTodoById() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		var err error
+		vars := mux.Vars(r)
+		id, err := strconv.Atoi(vars["id"])
+		if err != nil {
+			errorHttp := dtos.ErrMessage{Message: "Could not parse \"id\"", StatusCode: http.StatusBadRequest}
+			http.Error(w, errorHttp.Message, errorHttp.StatusCode)
+			return
+		}
+		todo, err := services.GetTodoById(id)
+
+		if err != nil {
+			errorHttp := dtos.ErrMessage{Message: err.Error(), StatusCode: http.StatusNotFound}
+			http.Error(w, errorHttp.Message, errorHttp.StatusCode)
+			return
+		}
+
+		jsonData, _ := json.Marshal(todo)
+
+		w.Write(jsonData)
 	}
 }
