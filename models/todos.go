@@ -63,3 +63,15 @@ func MarkTodoAsDone(id int) error {
 	todo.IsDone = true
 	return nil
 }
+
+func UndoneTodo(id int) error {
+	todo, err := GetTodoById(id)
+	if err != nil {
+		return err
+	}
+	if !todo.IsDone {
+		return errors.New("Cannot undone a not finished task")
+	}
+	todo.IsDone = false
+	return nil
+}
