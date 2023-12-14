@@ -43,11 +43,20 @@ func DeleteTodo(id int) error {
 	return errors.New("Not found")
 }
 
-func GetTodoById(id int) (Todo, error) {
-	for _, todo := range todos {
+func GetTodoById(id int) (*Todo, error) {
+	for idx, todo := range todos {
 		if todo.Id == id {
-			return todo, nil
+			return &todos[idx], nil
 		}
 	}
-	return Todo{}, errors.New("Not found")
+	return &Todo{}, errors.New("Not found")
+}
+
+func MarkTodoAsDone(id int) error {
+	todo, err := GetTodoById(id)
+	if err != nil {
+		return err
+	}
+	todo.IsDone = true
+	return nil
 }

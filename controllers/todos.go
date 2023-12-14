@@ -80,3 +80,26 @@ func GetTodoById() http.HandlerFunc {
 		w.Write(jsonData)
 	}
 }
+
+func MarkTodoAsDone() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		var err error
+		id, err := strconv.Atoi(vars["id"])
+		if err != nil {
+			errorHttp := dtos.ErrMessage{Message: "Could not parse id", StatusCode: http.StatusBadRequest}
+			w.WriteHeader(errorHttp.StatusCode)
+			json.NewEncoder(w).Encode(errorHttp)
+			return
+		}
+		err = services.MarkTodoAsDone(id)
+		if err != nil {
+			errorHttp := dtos.ErrMessage{Message: err.Error(), StatusCode: http.StatusNotFound}
+			w.WriteHeader(errorHttp.StatusCode)
+			json.NewEncoder(w).Encode(errorHttp)
+			return
+		}
+		response := dtos.SuccessMessage{Message: "Task Marked as Done", StatusCode: http.StatusOK}
+		json.NewEncoder(w).Encode(response)
+	}
+}
