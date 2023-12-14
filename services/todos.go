@@ -36,3 +36,7 @@ func GetTodoById(id int) (*models.Todo, error) {
 func MarkTodoAsDone(id int) error {
 	return models.MarkTodoAsDone(id)
 }
+
+func UndoneTodo(id int) error {
+	return models.UndoneTodo(id)
+}

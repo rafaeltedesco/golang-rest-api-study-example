@@ -101,6 +101,8 @@ func MarkTodoAsDone() http.HandlerFunc {
 				errorHttp.StatusCode = http.StatusNotFound
 			case "Already marked as done":
 				errorHttp.StatusCode = http.StatusBadRequest
+			case "Cannot undone a not finished task":
+				errorHttp.StatusCode = http.StatusBadRequest
 			}
 
 			w.WriteHeader(errorHttp.StatusCode)
@@ -108,6 +110,39 @@ func MarkTodoAsDone() http.HandlerFunc {
 			return
 		}
 		response := dtos.SuccessMessage{Message: "Task Marked as Done", StatusCode: http.StatusOK}
+		json.NewEncoder(w).Encode(response)
+	}
+}
+
+func UndoneTask() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		vars := mux.Vars(r)
+		var err error
+		id, err := strconv.Atoi(vars["id"])
+		if err != nil {
+			errorHttp := dtos.ErrMessage{Message: "Could not parse id", StatusCode: http.StatusBadRequest}
+			w.WriteHeader(errorHttp.StatusCode)
+			json.NewEncoder(w).Encode(errorHttp)
+			return
+		}
+		err = services.UndoneTodo(id)
+		if err != nil {
+			errorMessage := err.Error()
+			errorHttp := dtos.ErrMessage{Message: err.Error()}
+			switch errorMessage {
+			case "Not found":
+				errorHttp.StatusCode = http.StatusNotFound
+			case "Already marked as done":
+				errorHttp.StatusCode = http.StatusBadRequest
+			case "Cannot undone a not finished task":
+				errorHttp.StatusCode = http.StatusBadRequest
+			}
+
+			w.WriteHeader(errorHttp.StatusCode)
+			json.NewEncoder(w).Encode(errorHttp)
+			return
+		}
+		response := dtos.SuccessMessage{Message: "Undone Task successfully", StatusCode: http.StatusOK}
 		json.NewEncoder(w).Encode(response)
 	}
 }
