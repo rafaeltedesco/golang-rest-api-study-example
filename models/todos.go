@@ -1,8 +1,9 @@
 package models
 
 import (
-	"errors"
 	"time"
+
+	"github.com/rafaeltedesco/rest-api/utils/customErrors"
 )
 
 var currDate = time.Now()
@@ -40,7 +41,7 @@ func DeleteTodo(id int) error {
 			return nil
 		}
 	}
-	return errors.New("Not found")
+	return customErrors.ErrNotFound
 }
 
 func GetTodoById(id int) (*Todo, error) {
@@ -49,7 +50,7 @@ func GetTodoById(id int) (*Todo, error) {
 			return &todos[idx], nil
 		}
 	}
-	return &Todo{}, errors.New("Not found")
+	return &Todo{}, customErrors.ErrNotFound
 }
 
 func MarkTodoAsDone(id int) error {
@@ -58,7 +59,7 @@ func MarkTodoAsDone(id int) error {
 		return err
 	}
 	if todo.IsDone {
-		return errors.New("Already marked as done")
+		return customErrors.ErrTaskIsDone
 	}
 	todo.IsDone = true
 	return nil
@@ -70,7 +71,7 @@ func UndoneTodo(id int) error {
 		return err
 	}
 	if !todo.IsDone {
-		return errors.New("Cannot undone a not finished task")
+		return customErrors.ErrCannotUndone
 	}
 	todo.IsDone = false
 	return nil
